@@ -42,9 +42,9 @@ def get_expiring_items():
             value, unit = expiry.split()
             value = int(value)
 
-            if "days" in unit:
+            if "day" in unit.lower():
                 expiry_date = now + timedelta(days=value)
-            elif "months" in unit:
+            elif "month" in unit.lower():
                 expiry_date = now + timedelta(days=value * 30)  # Approximate
             else:
                 continue  # Skip items with invalid expiry format

@@ -38,11 +38,17 @@ with left_column:
     # Add new item
     st.subheader("Add New Item")
     new_item = st.text_input("Item Name")
-    expiry_days = st.number_input("Expiry (Days)", min_value=1, value=1)
+    col1, col2 = st.columns(2)
+    with col1:
+        expiry_value = st.number_input("Expiry Value", min_value=1, value=1)
+    with col2:
+        expiry_unit = st.selectbox("Expiry Unit", ["Days", "Months"])
+    
     if st.button("Add Item"):
         try:
-            add_food_item(new_item, f"{expiry_days} days")
-            st.success(f"Added {new_item}")
+            expiry = f"{expiry_value} {expiry_unit.lower()}"
+            add_food_item(new_item, expiry)
+            st.success(f"Added {new_item} with expiry: {expiry}")
             st.session_state.refresh = True
         except Exception as e:
             st.error(f"Error adding item: {str(e)}")
