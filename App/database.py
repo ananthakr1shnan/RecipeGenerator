@@ -35,10 +35,16 @@ def get_expiring_items():
 
     for document, metadata in zip(items["documents"], items["metadatas"]):
         expiry = metadata.get("expiry", "Unknown")
-        if expiry == "Unknown":
+
+        # Skip if expiry is unknown or not a string
+        if not isinstance(expiry, str) or expiry == "Unknown":
             continue
 
         try:
+            # Handle integer expiry values by converting them to a string format
+            if isinstance(expiry, int):
+                expiry = f"{expiry} days"  # or adjust based on your requirements
+
             value, unit = expiry.split()
             value = int(value)
 
@@ -53,7 +59,7 @@ def get_expiring_items():
             if now <= expiry_date <= now + timedelta(days=3):
                 expiring_items.append({"document": document, "expiry": expiry})
         except ValueError:
-            # Skip items with invalid expiry format
+            # Handle cases where splitting fails
             continue
 
     return expiring_items

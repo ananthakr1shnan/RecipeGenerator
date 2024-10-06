@@ -1,11 +1,15 @@
 from langchain_groq import ChatGroq
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Get the API key from environment variable
-api_key = os.environ.get("api_key")
+api_key = os.getenv("api_key")  # Changed to match your .env file
 
 if not api_key:
-    raise ValueError("GROQ_API_KEY environment variable not set")
+    raise ValueError("api_key environment variable not set")  # Updated error message
 
 llm = ChatGroq(
     temperature=0.7, groq_api_key=api_key, model_name="llama-3.1-70b-versatile"
