@@ -1,36 +1,19 @@
-import os
 from langchain_groq import ChatGroq
-from dotenv import load_dotenv
+import os
 
-# Load environment variables from .env file
-load_dotenv()
-
-# Retrieve the API key from environment variables
-api_key = os.getenv("api_key")
+# Get the API key from environment variable
+api_key = os.environ.get("api_key")
 
 if not api_key:
-    raise ValueError("GROQ API key not found. Please check your .env file.")
+    raise ValueError("GROQ_API_KEY environment variable not set")
 
-# Initialize ChatGroq
-llm = ChatGroq(temperature=0.7, groq_api_key=api_key, model_name="llama-3.1-70b-versatile")
+llm = ChatGroq(
+    temperature=0.7, groq_api_key=api_key, model_name="llama-3.1-70b-versatile"
+)
 
 
-def generate_recipe(selected_items):
-    prompt = f"""Create a recipe using the following ingredients: {', '.join(selected_items)}.
-    Please format the recipe as follows:
-    
-    Recipe Name:
-    Ingredients:
-    - [List of ingredients with quantities]
-    
-    Instructions:
-    1. [Step 1]
-    2. [Step 2]
-    ...
-    
-    Cooking Time: [Estimated cooking time]
-    Servings: [Number of servings]
-    """
+def generate_recipe(ingredients, button_state):
+    prompt = f"Create a recipe using the following ingredients: {', '.join(ingredients)}. Provide the title, ingredients list, and step-by-step instructions. Also, rate the tastiness of the recipe on a scale of 1-10."
 
     response = llm.invoke(prompt)
     return response.content
